@@ -36,20 +36,16 @@ public class InputManager : MonoBehaviour
 
     void OnClickPerformed(InputAction.CallbackContext obj)
     {
-        // Debug.Log();
-        var ray = m_Camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        var hit = Physics2D.Raycast(ray.origin, ray.direction);
-    
-        if (hit.collider != null)
+        var point = (Vector2)m_Camera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        var collider = Physics2D.OverlapPoint(point);
+        m_Circle.transform.position = point;
+        
+        if (collider != null)
         {
-            //test
-            var tPos = m_Tilemap.WorldToCell(hit.point);
-            var t = m_Tilemap.GetTile(tPos);
+            var tPos = m_Tilemap.WorldToCell(point);
             m_Tilemap.SetTileFlags(tPos, TileFlags.None);
-            m_Circle.transform.position = hit.point;
             m_Tilemap.SetColor(tPos, Color.yellow);
             m_Tilemap.SetTileFlags(tPos, TileFlags.LockAll);
-
         }
     }
 }
